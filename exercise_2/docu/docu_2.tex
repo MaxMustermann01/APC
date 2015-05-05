@@ -14,7 +14,9 @@
 \usepackage{courier} % Required for the courier font
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 \usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel}
+\usepackage[english]{babel}
+\usepackage{subcaption, caption, tabularx, minted}
+\usepackage{hyperref}
 
 % Margins
 \topmargin=-0.45in
@@ -174,8 +176,8 @@
 \subsection{The Future of Microprocessors}
 
 \subsection{Software and the Concurrency Revolution}
-Sutter and Larus focus in this paper on the implications of concurrency for software. Concurrency was becoming more important since CPU manufactures were starting to produce multicore CPUs with often reduced clock speeds for each core. Another reason to program concurrentyl is to improve responsiveness by performing work asynchronously. \\
-Their analyse leads to the conclusion that programmers are very likely to be overburdened by writing and debugging concurrent programs. Therefore, better programming tools need to be developed which itself is a difficult task. In terms of programming models they state that current models do not provide sufficient options to handle unstructered parallelism, specifically shared states. Especially locks introduce many new problems disqualifying them as an option. \\
+Sutter and Larus focus in this paper on the implications of concurrency for software. Concurrency was becoming more important since CPU manufactures were starting to produce multicore CPUs with often reduced clock speeds for each core. Besides performance they name and improvement of responsiveness by performing work asynchronously as second reason to program concurrently . \\
+Their analyses leads to the conclusion that programmers are very likely to be overburdened by writing and debugging concurrent programs. Therefore, better tools need to be developed which itself is a difficult task. In terms of programming models they state that current models do not provide sufficient options to handle unstructered parallelism, specifically shared states. Especially locks introduce many new problems making them to a bad option. \\
 The authors address important topics which even may have prevented the earlier introduction of multicore architectures. Although defining several features of better suited programming models and debugging tools they fail to give answers and ideas. Hence, this paper might only be helpful for outsiders and newbys to understand the predominant problem. \\
 Nevertheless, we give this paper a week accept.\\
 
@@ -195,6 +197,28 @@ Nevertheless, we give this paper a week accept.\\
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Multi-threaded load bandwidth]
+
+In this section we tested the performance of three devices: Creek08, Moore, ThinkPad E330 (8GB RAM). \\
+Therefore, we loaded an amount of data with different numbers of threads from RAM and measured the time until the last thread finished. To increase the quality of the measurement we repeated each of them for five seconds and averaged the times. \\
+For the first measurement we loaded 4MB per thread from RAM (\autoref{fig:bw_d}) and for the second 1GB in total (\autoref{fig:bw_c}). 
+
+\begin{figure}[!ht]
+	\centering
+    \begin{subfigure}[l]{0.45\textwidth}
+    	\includegraphics[width=\textwidth]{bw_d.png}
+        \caption{Bandwidth comaprsion for loading 4MB per thread from RAM.}
+        \label{fig:bw_d}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[r]{0.45\textwidth}
+    	\includegraphics[width=\textwidth]{bw_c.png}
+        \caption{Bandwidth comparison for loading 1GB from RAM.}
+        \label{fig:bw_c}
+    \end{subfigure}
+\end{figure}
+
+Surprisingly, Moore performs worse for the first scenario. It seems as if the bandwidth on Moore is highly dependable on the data size whereas this is barely not the case for the two other platforms. This is also supported by the decline of the BW-curve for Moore in \autoref{fig:bw_c}. In general the maximum bandwidths reported by Intel for the different platforms were not reached. Probably, the speed of the RAM slots is the main bottleneck. These theoretical numbers may also only be reached for very large data sizes.\\
+
 
 
 \end{homeworkProblem}
