@@ -85,8 +85,8 @@ int main(int argc, char **argv) {
     printf("[ERROR] Count [Mutex] failed: %d != %d\n", iCount, iC);
   else{
     printf("[INFO] Count [Mutex] succeeded: %d = %d\n", iCount, iC);
-    printf("[INFO] Elapsed time [Mutex] : %lfs\n", dend);
-    printf("[INFO] Updates [Mutex] : %.0lf /s\n", iC/dend);
+    printf("[INFO] Elapsed time [Mutex] : %lfms\n", dend*10e3);
+    printf("[INFO] Updates [Mutex] : %.2lf * 10^6/s\n", iC/dend/10e6);
   }
   
   /****************************** Atomic Operation **********************************/
@@ -120,8 +120,8 @@ int main(int argc, char **argv) {
     printf("[ERROR] Count [AtomOp] failed: %d != %d\n", iCount, iC);
   else{
     printf("[INFO] Count [AtomOp] succeeded: %d = %d\n", iCount, iC);
-    printf("[INFO] Elapsed [AtomOp] time : %lfs\n", dend);
-    printf("[INFO] Updates [AtomOp] : %.0lf /s\n", iC/dend);
+    printf("[INFO] Elapsed [AtomOp] time : %lfms\n", dend*10e3);
+    printf("[INFO] Updates [AtomOp] : %.2lf * 10^6/s\n", iC/dend/10e6);
   }
   
   /****************************** Read Modify Write ********************************/
@@ -157,8 +157,8 @@ int main(int argc, char **argv) {
     printf("[ERROR] Count [RMW] failed: %d != %d\n", iCount, iC);
   else{
     printf("[INFO] Count [RMW] succeeded: %d = %d\n", iCount, iC);
-    printf("[INFO] Elapsed [RMW] time : %lfs\n", dend);
-    printf("[INFO] Updates [RMW] : %.0lf /s\n", iC/dend);
+    printf("[INFO] Elapsed [RMW] time : %lfms\n", dend*10e3);
+    printf("[INFO] Updates [RMW] : %.2lf * 10^6/s\n", iC/dend/10e6);
   }
   
   return 0;
