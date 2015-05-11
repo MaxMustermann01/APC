@@ -174,7 +174,20 @@
 \begin{homeworkProblem}[Reading]
 
 \subsection{Cost-Effective Parallel Computing}
-
+The authors David A. Wood and Mark D. Hill show in their paper 'Cost-Effective Parallel 
+Computing' that parallel systems can be cost-effective at modest speedups when memory cost
+is significant fraction of system cost. They want to disprove the claim that parallel 
+computing is only worthwile when applications achieve nearly linear speedup. To do that the 
+researcher introduce the costup factor - the parallel system cost divided by uniprocessor
+cost - and compare it to the classical speedup.
+\\
+Their results show that parallel computing can cost-effective maximize throughput whenever
+speedup exceeds costup. Furthermore they expose when memory is sufficiently large, more 
+than one processor may be needed to efficiently utilize the memory.
+\\
+In our opinion the reasoning of the authors is correct although their results are not 
+groundbreaking. However, they results are solid arguments to disprove Amdahl's Law 
+once again. Thus, we weakly accept this paper.
 \subsection{A Survey of Cache Coherence Schemes for Multiprocessor}
 
 \end{homeworkProblem}
@@ -184,7 +197,30 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Shared Counter]
-
+As part of this exercise we should implement a Pthread program which results in a counter.
+A mutex has to be used to ensure mutual exclustion when incrementing the counter.
+\\
+The following listening gives the algorithm which we implemented for this.
+\begin{lstlisting}{c}
+void vCountMutex(void *arg){
+  int i, iID;
+  iID = (intptr_t) arg;
+  /* Synchronize threads */
+  pthread_barrier_wait(&barrier);
+  /* Start incrementation process */
+  for(i = (iID*iC)/iN; i < ((iID+1)*iC)/iN; i++){
+    /* Lock mutex */
+    pthread_mutex_lock(&mutex);
+    /* Increment count variable */
+    vInc(&iCount);
+    /* Unlock mutex */
+    pthread_mutex_unlock(&mutex);
+  }
+}
+\end{lstlisting}
+Depending on the thread-ID (arg) every thread increments the count variable until the variable
+reaches the C value. If we count without the mutual exclusion, data races result in a 
+mismatch between the counter variable and the C value. 
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
@@ -192,7 +228,79 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Shared Counter Revisited]
+Next, we should implement two alternative counter update methods. First, we use the atomic
+operation \_\_sync\_add\_and\_fetch().
+\begin{lstlisting}{c}
+void vCountAtom(void *arg){
+  int i, iID;
+  iID = (intptr_t) arg;
+  /* Synchronize threads */
+  pthread_barrier_wait(&barrier);
+  /* Start incrementation process */
+  for(i = (iID*iC)/iN; i < ((iID+1)*iC)/iN; i++){
+    /* Increment count variable */
+    __sync_add_and_fetch(&iCount,1);
+  }
+}
+\end{lstlisting}
+As we can see, with the atomic operation there is no need for locking like the PThread
+mutex anymore. This is because the fetch-and-add instruction allows any processor to 
+automatically increment a value in memory, preventing multiple processor collisions.
+\\\\
+Based on this operation we also implemented our own locking mechanism as followed:
+\begin{lstlisting}{c}
+typedef struct {
+  int ticket;
+  int users;
+} lock_t;
 
+static void lock_rmw(lock_t *t){
+  int me = __sync_add_and_fetch(&(t->users), 1);
+  while (t->ticket != me)
+    cpu_relax();
+}
+
+static void unlock_rmw(lock_t *t){
+  __sync_add_and_fetch(&(t->ticket), 1);
+}
+\end{lstlisting}
+In this case we need a atomic operation because this CPU instruction automatically modifies
+the contents of a memory location instead of the cached value.
+\end{homeworkProblem}
+\pagebreak
+%----------------------------------------------------------------------------------------
+%	Shared counter performance analysis
+%----------------------------------------------------------------------------------------
+
+\begin{homeworkProblem}[Shared counter performance analysis]
+As part of this exercise we should perform a performance analysis of the three 
+different shared counter implementations. 
+Following table shows the results of this performance analysis. Time is given in us and the 
+update-rate is given in $10^9$/s.
+\\
+\begin{tabular}{|c|c|c|c|c|c|c|}\hline
+   Thread \\Count & Time[Mutex] & Updates[Mutex] & Time[Atomic] & Updates[Atomic] & Time[RMW] & Updates[RMW] \\ \hline
+   1 & 147 & 1.36 & 48 & 4.15 & 89 & 2.24  \\ \hline
+   2 & 314 & 0.64 & 82 & 2.43 & 1260 & 0.16  \\ \hline
+   4 & 1114 & 0.18 & 174 & 1.15 & 1494 & 0.13  \\ \hline
+   8 & 318 & 0.63 & 180 & 1.11 & 2706 & 0.07  \\ \hline
+   12 & 357 & 0.56 & 222 & 0.9 & 3781 & 0.05  \\ \hline
+   16 & 315 & 0.63 & 187 & 1.07 & 5051 & 0.04  \\ \hline
+   24 & 334 & 0.60 & 167 & 1.19 & 7281 & 0.03  \\ \hline
+   32 & 369 & 0.54 & 222 & 0.9 & 23962 & 0.01  \\ \hline
+   40 & 350 & 0.57 & 227 & 0.88 & 11956 & 0.02  \\ \hline
+   48 & 355 & 0.56 & 212 & 0.94 & 22812 & 0.01  \\ \hline
+\end{tabular}
+\\
+The derived number of updates per seconds dependent on the number of threads gives
+a nice expression about the performance.
+\begin{center}
+\includegraphics[width=0.7\columnwidth]{Update_rate.png}
+\end{center}
+As the graphic shows the atomic increment implementation gives the best result. Second is 
+the PThread Mutex implementation. We guess that this gap is due to the high overhead for 
+the Mutex implementation compared to the simplicity of the atomic operation. The worst 
+result is given by our own lock implementation. 
 \end{homeworkProblem}
 
 \clearpage
