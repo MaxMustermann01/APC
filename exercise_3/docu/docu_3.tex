@@ -177,7 +177,7 @@
 The authors David A. Wood and Mark D. Hill show in their paper 'Cost-Effective Parallel 
 Computing' that parallel systems can be cost-effective at modest speedups when memory cost
 is significant fraction of system cost. They want to disprove the claim that parallel 
-computing is only worthwile when applications achieve nearly linear speedup. To do that the 
+computing is only worthwile when applications achieve nearly linear speedup. To do so the 
 researcher introduce the costup factor - the parallel system cost divided by uniprocessor
 cost - and compare it to the classical speedup.
 \\
@@ -188,7 +188,25 @@ than one processor may be needed to efficiently utilize the memory.
 In our opinion the reasoning of the authors is correct although their results are not 
 groundbreaking. However, they results are solid arguments to disprove Amdahl's Law 
 once again. Thus, we weakly accept this paper.
+
+
 \subsection{A Survey of Cache Coherence Schemes for Multiprocessor}
+In this paper from 1990 Stenström surveys different schemes for maintaining cache 
+coherence which was an upcoming problem back then. The emerging shared-memory 
+multiprocessors showed up to introduce three main problems: Memory contention, 
+Communication contention and latency. Depending on the system architecture (bus, 
+multistage interconnect) one or many of these problems are predominant and were tackled 
+with private caches. \\
+The proposed solutions ranged from hardware-implemented protocols, eg. snoopy cache 
+protocols and directory schemes, to software-implemented policies. He evaluated each of 
+them carefully and argued which is best suited for different systems. However, since 
+only snoopy protocols had been implemented it was shear impossible to evaluate those 
+under real-world conditions. \\
+Stenström discusses many aspects of cache coherency, but realizes that much experimental
+research is missing to rank different methods. Nevertheless, we are impressed by his
+contribution. Many of the discussed points are still valid today. Thus, we give this 
+paper a strong accept.
+
 
 \end{homeworkProblem}
 
