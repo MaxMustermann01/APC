@@ -1,0 +1,18 @@
+#gnuplot
+set key bottom right
+set xlabel 'number of threads'  
+set ylabel 'Updates/time [10^-7/s] '
+set title 'MCS'
+# set dgrid3d 30,30
+# set hidden3d
+# set xrange [0: 17]
+# set yrange [170: 360]
+# set log y 
+set style line 1 lc rgb 'blue' lt 1 lw 2 pt 7 pi -1 ps 1
+set style line 2 lc rgb 'magenta' lt 1 lw 2 pt 7 pi -1 ps 1
+set style line 3 lc rgb 'orange' lt 1 lw 2 pt 7 pi -1 ps 1
+
+set pointintervalbox 2
+set terminal pngcairo size 1280, 960 enhanced font "Helvetica,25"
+set output '/home/sven/Dropbox/TI/APC/exercise_4/docu/update_rate.png'
+plot '/home/sven/Dropbox/TI/APC/exercise_4/out_msc_ch.txt' using 1:3 with linespoints ls 1 title 'MCS'
