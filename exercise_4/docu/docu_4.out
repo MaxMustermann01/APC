@@ -1,0 +1,5 @@
+\BOOKMARK [1][-]{section*.2}{Reading}{}% 1
+\BOOKMARK [2][-]{section*.3}{Efficient Synchronization: Let Them Eat QOLB}{section*.2}% 2
+\BOOKMARK [2][-]{section*.4}{GLocks: Efficient Support for Highly-Contended Locks in Many-Core CMPs}{section*.2}% 3
+\BOOKMARK [1][-]{section*.5}{List based QLocks \(aka MCS Locks\)}{}% 4
+\BOOKMARK [1][-]{section*.6}{Lock performance analysis}{}% 5

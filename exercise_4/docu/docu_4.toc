@@ -1,0 +1,6 @@
+\select@language {ngerman}
+\contentsline {section}{Reading}{3}{section*.2}
+\contentsline {subsection}{Efficient Synchronization: Let Them Eat QOLB}{3}{section*.3}
+\contentsline {subsection}{GLocks: Efficient Support for Highly-Contended Locks in Many-Core CMPs}{3}{section*.4}
+\contentsline {section}{List based QLocks (aka MCS Locks)}{3}{section*.5}
+\contentsline {section}{Lock performance analysis}{4}{section*.6}
