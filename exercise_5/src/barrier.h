@@ -89,6 +89,8 @@ typedef struct mcs_node {
 } TreeNode;
 
 TreeNode* nodes;
+
+void vBarrierTree(void *);
     
 TreeNode* initializeMCSCommonStructures(unsigned int no_of_threads);
 

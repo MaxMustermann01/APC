@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
   
   /* Create all threads */
   for(i = 0; i < iN; ++i){
-    if(pthread_create(&threads[i], NULL, (void*) vBarrierDissemination, (void *) (intptr_t)i)){
+    if(pthread_create(&threads[i], NULL, (void*) vBarrierTree, (void *) (intptr_t)i)){
       printf("[ERROR] Could not create thread\n");
       exit(1);
     }
