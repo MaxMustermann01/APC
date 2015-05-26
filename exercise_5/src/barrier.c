@@ -283,68 +283,56 @@ void dissemination_barrier(ProcNode* localflags, char* sense, int logp, int* par
 }
 
 TreeNode* initializeMCSCommonStructures(unsigned int no_of_threads) {
-    int i;
-    int j = 0;
-    TreeNode* nodes = NULL;
-    if (no_of_threads > 0) {
-        nodes = (TreeNode*) malloc(sizeof (TreeNode) * no_of_threads);
-        if (nodes) {
-            memset(nodes, 0, sizeof (TreeNode) * no_of_threads);
-            for (i = 0; i < no_of_threads; i++) {
-                for (j = 0; j < 4; j++) {
-                    //This was the Bug in MCS paper
-                    //in paper it is 4*i + j , where as it should be
-                    // 4 * i + j + 1
-                    nodes[i].haveChild[j] = (4 * i + j + 1) < no_of_threads;
-                    nodes[i].childNotReady[j] = nodes[i].haveChild[j];
-                }
-                nodes[i].parentSense = 0;
-                if (!i) {
-                    nodes[i].parentPointer = &(nodes[i].dummy);
-                } else {
-#ifdef DEBUG1
-                    printf("For Node:%d parent:%d,%d\n", i, (i - 1) / 4, (i - 1) % 4);
-#endif
-                    nodes[i].parentPointer = &(nodes[(i - 1) / 4].childNotReady[(i - 1) % 4]);
-                }
-                nodes[i].childPointers[0] = (2 * i + 1) >= no_of_threads ? &(nodes[i].dummy) : &(nodes[2 * i + 1].parentSense);
-                nodes[i].childPointers[1] = (2 * i + 2) >= no_of_threads ? &(nodes[i].dummy) : &(nodes[2 * i + 2].parentSense);
-                nodes[i].dummy = 1;
-#ifdef DEBUG1
-                printf("For Node:%d children:%d,%d\n", i, (2 * i + 1) >= no_of_threads ? i : (2 * i + 1), (2 * i + 2) >= no_of_threads ? i : (2 * i + 2));
-#endif
-            }
+  int i;
+  int j = 0;
+  TreeNode* nodes = NULL;
+  if (no_of_threads > 0) {
+    nodes = (TreeNode*) malloc(sizeof (TreeNode) * no_of_threads);
+    if (nodes) {
+      memset(nodes, 0, sizeof (TreeNode) * no_of_threads);
+      for (i = 0; i < no_of_threads; i++) {
+        for (j = 0; j < 4; j++) {
+          nodes[i].haveChild[j] = (4 * i + j + 1) < no_of_threads;
+          nodes[i].childNotReady[j] = nodes[i].haveChild[j];
         }
-
+        nodes[i].parentSense = 0;
+        if (!i) {
+          nodes[i].parentPointer = &(nodes[i].dummy);
+        } 
+        else {
+          nodes[i].parentPointer = &(nodes[(i - 1) / 4].childNotReady[(i - 1) % 4]);
+        }
+        nodes[i].childPointers[0] = (2 * i + 1) >= no_of_threads ? &(nodes[i].dummy) : &(nodes[2 * i + 1].parentSense);
+        nodes[i].childPointers[1] = (2 * i + 2) >= no_of_threads ? &(nodes[i].dummy) : &(nodes[2 * i + 2].parentSense);
+        nodes[i].dummy = 1;
+      }
     }
-    return nodes;
+  }
+  return nodes;
 }
 
 void mcs_barrier(TreeNode* currNode, int curr_thread_no, char* sense) {
-    int allChildrenReady = 0;
-    int i = 0;
-    do {
-        allChildrenReady = 1;
-        for (i = 0; i < 4; i++) {
-            if (currNode->childNotReady[i]) {
-                allChildrenReady = 0;
-                break;
-            }
-        }
-
-    } while (!allChildrenReady);
-
+  int allChildrenReady = 0;
+  int i = 0;
+  do {
+    allChildrenReady = 1;
     for (i = 0; i < 4; i++) {
-        currNode->childNotReady[i] = currNode->haveChild[i];
+      if (currNode->childNotReady[i]) {
+        allChildrenReady = 0;
+        break;
+      }
     }
-#ifdef DEBUG1
-    printf("Entering second loop:%d\n", curr_thread_no);
-#endif
-    *(currNode->parentPointer) = 0;
-    if (curr_thread_no) {
-        while (currNode->parentSense != *sense);
-    }
-    *(currNode->childPointers[0]) = *sense;
-    *(currNode->childPointers[1]) = *sense;
-    *sense = !(*sense);
+
+  } while (!allChildrenReady);
+
+  for (i = 0; i < 4; i++) {
+    currNode->childNotReady[i] = currNode->haveChild[i];
+  }
+  *(currNode->parentPointer) = 0;
+  if (curr_thread_no) {
+    while (currNode->parentSense != *sense);
+  }
+  *(currNode->childPointers[0]) = *sense;
+  *(currNode->childPointers[1]) = *sense;
+  *sense = !(*sense);
 }

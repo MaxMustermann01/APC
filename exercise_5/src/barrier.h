@@ -27,7 +27,6 @@ int iIter, iN; 			// threads and count limit
 int iCount;			// count variable
 int iSense;			// sense variable
 pthread_barrier_t barrier;
-pthread_mutex_t mutex;
 void vBarrierPThread(void *);
 
 /********************************* For central barrier ***************************/
