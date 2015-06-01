@@ -61,6 +61,43 @@ void* down_sweep(void* argp){
 }
 
 
+void* prefix_sum(void* argp){
+    sArg_t *thread = (sArg_t*) argp;
+
+    int d_stop = (int) log2(thread->length)-1;
+
+    for (int d = 0; d <= d_stop; ++d){
+    	int step = (int) pow(2, d+1);    
+    	int last_step = (int) pow(2,d)-1; 
+    	if (step*thread->id < thread->length - 1){
+    		for (int k = step*thread->id; k < thread->length; k+=step*thread->nThreads) {
+    			thread->array[k+step-1] += thread->array[k+last_step];
+    		}
+    	}
+    	pthread_barrier_wait(&barrier);
+    }
+
+    if (thread->id == 0) thread->array[thread->length-1] = 0;
+    int d_start = (int) log2(thread->length);
+    int t;
+
+    pthread_barrier_wait(&barrier);
+
+    for (int d = d_start-1; d >= 0; --d){
+    	int step = pow(2, d+1);     
+    	int last_step = pow(2, d);
+    	if (step*thread->id < thread->length - 1){
+    		for (int k = step*thread->id; k < thread->length; k+=step*thread->nThreads) {
+    			t = thread->array[k+last_step-1];
+    			thread->array[k+last_step-1] = thread->array[k+step-1];
+    			thread->array[k+step-1] += t;
+    		}
+    	}
+    	pthread_barrier_wait(&barrier);
+    }
+    pthread_exit(NULL);
+}
+
 int main(int argc, char* argv[]){
     int nThreads, arrayLength;
     double dstart = 0.0, dend = 0.0;
@@ -106,7 +143,7 @@ int main(int argc, char* argv[]){
     std::cout << "Start calculation...\n";
     dstart = dstartMesGTOD();
 
-    for (int nThread = 0; nThread < nThreads; ++nThread) {
+/*    for (int nThread = 0; nThread < nThreads; ++nThread) {
         pthread_create(&threads[nThread], &attr, &up_sweep, (void *) &(arg[nThread]));
     }
     for (int nThread = 0; nThread < nThreads; ++nThread) {
@@ -121,10 +158,18 @@ int main(int argc, char* argv[]){
     for (int nThread = 0; nThread < nThreads; ++nThread) {
         pthread_join(threads[nThread], &status);
     }
+*/
+
+	for (int nThread = 0; nThread < nThreads; ++nThread) {
+        pthread_create(&threads[nThread], &attr, &prefix_sum, (void *) &(arg[nThread]));
+    }
+    for (int nThread = 0; nThread < nThreads; ++nThread) {
+        pthread_join(threads[nThread], &status);
+    }
 
     dend = dstopMesGTOD(dstart);
 
-    if (arrayLength < 256){
+    if (arrayLength <= 256){
 	    std::cout << "\nRun test...\n";
 	    std::cout << "\nWAS | IS | SHOULD\n";
 	    for (int ii = 0; ii < arrayLength; ++ii){
