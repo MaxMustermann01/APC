@@ -213,6 +213,8 @@ research should be performed. Hence, we strongly accept this paper.
 
 \begin{homeworkProblem}[Parallel Prefix Sum - Development]
 
+We implemented the parallel prefix sum according to the algorithm suggested by Blelloch. To ensure that our code generates correct results we compared the results of smaller input arrays with that of a one core straight forward implementation. \\
+To reach reasonable timings we used arrays of length 16777216 ($=2^24$) with 20-fold repetition. \\
 
 \end{homeworkProblem}
 
@@ -222,6 +224,36 @@ research should be performed. Hence, we strongly accept this paper.
 
 \begin{homeworkProblem}[Parallel Prefix Sum - Analysis]
 
+\autoref{tab:comparison} shows our results. The runtimes for different numactl settings where measured for Thread counts (TC).
+
+\begin{figure}[!h]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+   TC & $T_{default}$[s] & $T_{membind}$[s] & $T_{interleave}$[s] \\ \hline
+   1 & 0.499 & 0.455 & 0.414   \\ \hline
+   2 & 0.419 & 0.0485 & 0.397  \\ \hline
+   4 & 0.400 & 0.405 & 0.358  \\ \hline
+   8 & 0.478 & 0.478 & 0.327  \\ \hline
+   12 & 0.673 & 0.681 & 0.378  \\ \hline
+   16 & 0.552 & 0.553 & 0.264  \\ \hline
+   24 & 0.576 & 0.582 & 0.272  \\ \hline
+   32 & 0.561 & 0.577 & 0.244  \\ \hline
+   40 & 0.606 & 0.620 & 0.293  \\ \hline
+   48 & 0.601 & 0.609 & 0.275  \\ \hline
+\end{tabular}
+\caption{Performance comparison of different numactl settings}
+\label{tab:comparison}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+    \includegraphics[width=0.8\textwidth]{comparison.png}
+    \caption{Runtimes for the parallel prefix sum.}
+    \label{fig:comparison}
+\end{figure}
+
+The fact that the results for the default and the membind configurations are mostly the same leads us to the conclusion that per default the memory is bind to one socket. Hence, one should enable interleave=all or similar options when running multi-threaded implementations as shown by the performance of this configuration. \\
+All settings show a peak at about TC=12 which is the number of cores per die. This may be expected for the default and membind configurations, but not for the interleaved one. Since it makes usage of the distribution of the array different cores on different dies seem to be used... This remains unclear to us.
 
 \end{homeworkProblem}
 
