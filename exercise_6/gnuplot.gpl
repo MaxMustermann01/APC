@@ -1,0 +1,20 @@
+#gnuplot
+set key center right
+set xlabel 'number of threads'  
+set ylabel 'time [s] '
+set title 'Comparison of different numactl settings for parallel prefix sum'
+# set dgrid3d 30,30
+# set hidden3d
+# set xrange [0: 17]
+# set yrange [170: 360]
+# set log y 
+set style line 1 lc rgb 'blue' lt 1 lw 2 pt 7 pi -1 ps 1
+set style line 2 lc rgb 'magenta' lt 1 lw 2 pt 7 pi -1 ps 1
+set style line 3 lc rgb 'orange' lt 1 lw 2 pt 7 pi -1 ps 1
+
+set pointintervalbox 2
+set terminal pngcairo size 1280, 960 enhanced font "Helvetica,25"
+set output 'docu/comparison.png'
+plot 'src/out_default.txt' using 1:2 with linespoints ls 1 title 'default', \
+'src/out_membind.txt' using 1:2 with linespoints ls 2 title 'membind', \
+'src/out_interleave.txt' using 1:2 with linespoints ls 3 title 'interleave'
