@@ -5,7 +5,7 @@
  *                  the "Advanced Parallel Computing" 
  *                  lecture of the University of Heidelberg.
  * 
- *                  Exercise 6 - Red-Black Tree
+ *                  Exercise 7 - Red-Black Tree
  *                               
  * 
  * AUTHORS          Sven Dorkenwald

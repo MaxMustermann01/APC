@@ -22,6 +22,7 @@
 #include "rb_tree.h"
 #include "time_measurement.h"
 
+/* Uncommend this line if you want to trace and print the tree */
 //#define TRACE
 #define MAX_ELEMENTS 10000000
 #define DEFAULT_ADD 10
@@ -34,7 +35,6 @@ int main(int argc, char **argv) {
     int iKey, iVal; // Variables for each key and value
     double dstart = 0.0, dend = 0.0;
     rbtree t = rbtree_create();
-    print_tree(t);
     
     /* Check integrity of arguments */
     if(argc == 2) {
@@ -66,7 +66,6 @@ int main(int argc, char **argv) {
         printf("Inserting %d -> %d\n\n", iKey, iVal);
 #endif
         rbtree_insert(t, (void*)iKey, (void*)iVal, compare_int);
-        //assert(rbtree_lookup(t, (void*)x, compare_int) == (void*)y);
     }
     
     /* Start time measurement */

@@ -14,7 +14,9 @@
  * LAST CHANGE      03. JUNE 2015
  * 
  ********************************************************************************/
-#define VERIFY_RBTREE
+
+/* Uncommend this line for verification */
+//#define VERIFY_RBTREE
 #define INDENT_STEP  4
 
 enum rbtree_node_color { RED, BLACK };
