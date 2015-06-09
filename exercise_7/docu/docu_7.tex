@@ -173,8 +173,17 @@
 
 \begin{homeworkProblem}[Reading]
 \subsection{Why the grass may not be greener on the other side: a comparison of locking vs. transactional memory}
+McKenney et. al discuss the strength and weaknesses of locking and transactional memory schemes. They analyse those and give suggestions for further improvement. \\
+Their work shows that locking solutions might not be perfectly suited, but since it is widely used many workarounds were developed for certain problems. Transactional memory on the other side might look like very elegant at first glance, but leads to many ugly problems. Moreover, a large community working on these problems is missing. The authors do not doom TM to the bin, but argue that it need to focus on applications which preexisting machanisms poorly serve to grow a support. \\
+Surprisingly, this paper might be mostly correct today showing how little progress was reached in the last two decades. Both schemes might have improved since then, but few of their main problems are overcome - even their supposed remaining challenges for locking are still not solved today. We give this paper a strong accept.
+
+
 
 \subsection{Stretching transactional memory}
+Dragojevic, Guerraoui and Kapalka present their Software Transactional Memory implementation (Swiss TM). To proof that Swiss TM is superior to other implementations they compare their performances in different benchmarks. \\
+The key asset of their implementation is their two-phase contention manager. Unlike other STMs they use eager and lazy strategy. SwissTM  detects write/write conflicts eagerly and read/write conflicts lazily. This makes it effective for mixed workloads containing non-uniform, dnyamic data structures and various transaction sizes. \\
+We like the way the authors try to improve existing schemes by combining different strategies to use them at what they are best. However, it remains unclear how their implementation stacks up against HTM or even current Mutex implementations. If STM should be the standard one day they have to compete with currently used systems, otherwise their work is only meant to be recognized by a small community. Additionaly, they name problems like that their implementation is not privatization-safe which ''did not affect us (they), as none of the benchmarks we (they) use requires privatization-safe ST''. \\
+Nevertheless, we give this paper a weak accept.
 
 \end{homeworkProblem}
 
