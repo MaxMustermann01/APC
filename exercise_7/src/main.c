@@ -24,7 +24,7 @@
 
 /* Uncommend this line if you want to trace and print the tree */
 //#define TRACE
-#define MAX_ELEMENTS 10000000
+#define INIT_ELEMENTS 10000000
 #define DEFAULT_ADD 10
 #define DEFAULT_SEARCH 90
 
@@ -58,9 +58,9 @@ int main(int argc, char **argv) {
     }
 
     /* Initialize the RB-Tree with index 0 to MAX_ELEMENTS */
-    for(i=0; i<MAX_ELEMENTS; i++) {
-        iKey = i; // index 
-        iVal = rand() % 10000; // random value between 0 and 10.000
+    for(i=0; i<INIT_ELEMENTS; i++) {
+        iKey = rand(); // index 
+        iVal = rand(); // random value between 0 and 10.000
 #ifdef TRACE
         print_tree(t);
         printf("Inserting %d -> %d\n\n", iKey, iVal);
@@ -77,8 +77,8 @@ int main(int argc, char **argv) {
         /* Insert operations */
         for(j = 0; j < iNumAdd; j++) {
             i++;
-            iKey = rand() % MAX_ELEMENTS; // index between 0 to MAX_ELEMENTS
-            iVal = rand() % 10000; // random value between 0 and 10.000
+            iKey = rand();
+            iVal = rand();
 #ifdef TRACE
             print_tree(t);
             printf("Inserting %d -> %d\n\n", iKey, iVal);
@@ -88,8 +88,8 @@ int main(int argc, char **argv) {
         /* Search operations */
         for(j = 0; j < iNumAdd; j++) {
             i++;
-            iKey = rand() % MAX_ELEMENTS; // index between 0 to MAX_ELEMENTS
-            iVal = rand() % 10000; // random value between 0 and 10.000
+            iKey = rand();
+            iVal = rand();
             rbtree_lookup(t, (void*)iKey, compare_int);
 #ifdef TRACE
             print_tree(t);
