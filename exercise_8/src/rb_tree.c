@@ -373,7 +373,7 @@ void* rbtree_lookup(rbtree t, void* key, compare_func compare) {
     /* Shared lock */
     pthread_rwlock_rdlock(&rwlock);
     node n = lookup_node(t, key, compare);
-    return n == NULL ? NULL : n->value;
     /* Unlock */
     pthread_rwlock_unlock(&rwlock);
+    return n == NULL ? NULL : n->value;
 }
