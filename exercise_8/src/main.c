@@ -54,7 +54,7 @@ void vUpdateStream(void *arg){
             rbtree_insert(t, (void*)iKey, (void*)iVal, compare_int);
         }
         /* Search operations */
-        for(j = 0; j < iNumAdd; j++) {
+        for(j = 0; j < iNumSearch; j++) {
             i++;
             iKey = rand();
             iVal = rand();
