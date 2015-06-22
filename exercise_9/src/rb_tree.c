@@ -19,6 +19,7 @@
 #include "rb_tree.h"
 #include <assert.h>
 #include <pthread.h>
+#include <errno.h>
 
 /***************************** Private type definitions ***************************/
 /* Each node also stores its color, either red or black, using an enumeration */
@@ -217,12 +218,37 @@ node new_node(void* key, void* value, color node_color, node left, node right) {
 }
 
 node wrlock_branch(node n, int tid){
-    if(grandparent(grandparent(grandparent(grandparent(n)))) != NULL){
+    int result=1;
+    if(grandparent(grandparent(grandparent(grandparent(grandparent(n))))) != NULL){
 #ifdef DEBUG
         printf("\n%u Thread: lock grandgrandgrandgrandparent, %p", tid, grandparent(grandparent(grandparent(grandparent(n)))));
 	fflush(stdout);
 #endif
-        pthread_rwlock_wrlock(grandparent(grandparent(grandparent(grandparent(n))))->rwlock);
+	result = pthread_rwlock_wrlock(grandparent(grandparent(grandparent(grandparent(grandparent(n)))))->rwlock);
+	if(result == EDEADLK){
+	  printf("\n[ERROR] Current thread already owns the read-write lock");
+	  exit(1);
+	}
+	else if(result == EINVAL){
+	  printf("\n[ERROR]  value specified by rwlock does not refer to an initialised read-write lock");
+	  exit(1);
+	}
+	return grandparent(grandparent(grandparent(grandparent(grandparent(n)))));
+    }
+    else if(grandparent(grandparent(grandparent(grandparent(n)))) != NULL){
+#ifdef DEBUG
+        printf("\n%u Thread: lock grandgrandgrandgrandparent, %p", tid, grandparent(grandparent(grandparent(grandparent(n)))));
+	fflush(stdout);
+#endif
+	result = pthread_rwlock_wrlock(grandparent(grandparent(grandparent(grandparent(n))))->rwlock);
+	if(result == EDEADLK){
+	  printf("\n[ERROR] Current thread already owns the read-write lock");
+	  exit(1);
+	}
+	else if(result == EINVAL){
+	  printf("\n[ERROR]  value specified by rwlock does not refer to an initialised read-write lock");
+	  exit(1);
+	}
 	return grandparent(grandparent(grandparent(grandparent(n))));
     }
     else if(grandparent(grandparent(grandparent(n))) != NULL){
@@ -230,7 +256,15 @@ node wrlock_branch(node n, int tid){
         printf("\n%u Thread: lock grandgrandgrandparent, %p", tid, grandparent(grandparent(grandparent(n))));
 	fflush(stdout);
 #endif
-        pthread_rwlock_wrlock(grandparent(grandparent(grandparent(n)))->rwlock);
+	result = pthread_rwlock_wrlock(grandparent(grandparent(grandparent(n)))->rwlock);
+        if(result == EDEADLK){
+	  printf("\n[ERROR] Current thread already owns the read-write lock");
+	  exit(1);
+	}
+	else if(result == EINVAL){
+	  printf("\n[ERROR]  value specified by rwlock does not refer to an initialised read-write lock");
+	  exit(1);
+	}
 	return grandparent(grandparent(grandparent(n)));
     }
     else if(grandparent(grandparent(n)) != NULL){
@@ -238,7 +272,15 @@ node wrlock_branch(node n, int tid){
         printf("\n%u Thread: lock grandgrandparent, %p", tid, grandparent(grandparent(n)));
 	fflush(stdout);
 #endif
-        pthread_rwlock_wrlock(grandparent(grandparent(n))->rwlock);
+	result = pthread_rwlock_wrlock(grandparent(grandparent(n))->rwlock);
+	if(result == EDEADLK){
+	  printf("\n[ERROR] Current thread already owns the read-write lock");
+	  exit(1);
+	}
+	else if(result == EINVAL){
+	  printf("\n[ERROR]  value specified by rwlock does not refer to an initialised read-write lock");
+	  exit(1);
+	}
 	return grandparent(grandparent(n));
     }
     else if(grandparent(n) != NULL){
@@ -246,28 +288,50 @@ node wrlock_branch(node n, int tid){
         printf("\n%u Thread: lock grandparent, %p", tid, grandparent(n));
         fflush(stdout);
 #endif
-        pthread_rwlock_wrlock(grandparent(n)->rwlock);
-        return grandparent(n);
+	result = pthread_rwlock_wrlock(grandparent(n)->rwlock);
+        if(result == EDEADLK){
+	  printf("\n[ERROR] Current thread already owns the read-write lock");
+	  exit(1);
+	}
+	else if(result == EINVAL){
+	  printf("\n[ERROR]  value specified by rwlock does not refer to an initialised read-write lock");
+	  exit(1);
+	}
+	return grandparent(n);
     }
     else if(n->parent != NULL){
 #ifdef DEBUG
         printf("\n%u Thread: lock parent, %p", tid, n->parent);
         fflush(stdout);
 #endif
-        pthread_rwlock_wrlock(n->parent->rwlock);
-        return n->parent;
+	result = pthread_rwlock_wrlock(n->parent->rwlock);
+        if(result == EDEADLK){
+	  printf("\n[ERROR] Current thread already owns the read-write lock");
+	  exit(1);
+	}
+	else if(result == EINVAL){
+	  printf("\n[ERROR]  value specified by rwlock does not refer to an initialised read-write lock");
+	  exit(1);
+	}
+	return n->parent;
     }
     else
         return NULL;
 }
 
 void unlock_branch(node lockednode, int tid){
+    int result;
     if(lockednode != NULL){
 #ifdef DEBUG
         printf("\n%u Thread: unlock node, %p", tid, lockednode);
 	fflush(stdout);
 #endif
-        pthread_rwlock_unlock(lockednode->rwlock);
+        result = pthread_rwlock_unlock(lockednode->rwlock);
+	if(result != 0){
+	    printf("\n[ERROR] Couldn't unlock lock");
+	    fflush(stdout);
+	    exit(1);
+	}
     }
 }
 

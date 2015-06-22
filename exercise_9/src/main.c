@@ -42,17 +42,6 @@ void vUpdateStream(void *arg){
     /* Generate the update stream */
     i = 0;
     while(i < iOpsPerThread) {
-        /* Insert operations */
-        for(j = 0; j < iNumAdd; j++) {
-            i++;
-            iKey = rand();
-            iVal = rand();
-#ifdef TRACE
-            print_tree(t);
-            printf("Inserting %d -> %d\n\n", iKey, iVal);
-#endif
-            rbtree_insert(t, (void*)iKey, (void*)iVal, compare_int, iID);
-        }
         /* Search operations */
         for(j = 0; j < iNumSearch; j++) {
             i++;
@@ -63,6 +52,17 @@ void vUpdateStream(void *arg){
             print_tree(t);
             printf("Searching %d -> %d\n\n", iKey, rbtree_lookup(t, (void*)iKey, compare_int));
 #endif
+        }
+        /* Insert operations */
+        for(j = 0; j < iNumAdd; j++) {
+            i++;
+            iKey = rand();
+            iVal = rand();
+#ifdef TRACE
+            print_tree(t);
+            printf("Inserting %d -> %d\n\n", iKey, iVal);
+#endif
+            rbtree_insert(t, (void*)iKey, (void*)iVal, compare_int, iID);
         }
     }
 }
@@ -140,8 +140,8 @@ int main(int argc, char **argv) {
     dend = dstopMesGTOD(dstart);
     
     /* Evaluate execution time */
-    printf("\n[INFO] Operations per second : %lf x 10^3 OP/s\n", (iOperations/dend)/10e2);
-    printf("\n%lf %.2lf", iOperations/10e5, (iOperations/dend)/10e2);
+    printf("\n[INFO] Operations per second : %lf x 10^3 OP/s", (iOperations/dend)/10e2);
+    printf("\n%lf %.2lf\n", iOperations/10e5, (iOperations/dend)/10e2);
     
     return 0;
 }
