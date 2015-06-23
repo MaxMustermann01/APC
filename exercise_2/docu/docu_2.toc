@@ -1,0 +1,8 @@
+\select@language {ngerman}
+\contentsline {section}{Reading}{3}{section*.2}
+\contentsline {subsection}{The Future of Microprocessors}{3}{section*.3}
+\contentsline {subsection}{Software and the Concurrency Revolution}{3}{section*.4}
+\contentsline {section}{Pointer Chasing Benchmark}{3}{section*.5}
+\contentsline {subsection}{Memory Levels, Cache Size and Associated Latency}{5}{section*.6}
+\contentsline {subsection}{Associativity of the caches and the TLB}{5}{section*.7}
+\contentsline {section}{Multi-threaded load bandwidth}{6}{section*.8}

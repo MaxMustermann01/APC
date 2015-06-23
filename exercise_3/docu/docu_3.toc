@@ -1,0 +1,7 @@
+\select@language {ngerman}
+\contentsline {section}{Reading}{3}{section*.2}
+\contentsline {subsection}{Cost-Effective Parallel Computing}{3}{section*.3}
+\contentsline {subsection}{A Survey of Cache Coherence Schemes for Multiprocessor}{3}{section*.4}
+\contentsline {section}{Shared Counter}{3}{section*.5}
+\contentsline {section}{Shared Counter Revisited}{4}{section*.6}
+\contentsline {section}{Shared counter performance analysis}{5}{section*.7}

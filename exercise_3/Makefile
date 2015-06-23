@@ -4,7 +4,7 @@
 #          Günther Schindler
 #
 
-CC=gcc
+CC=g++
 CFLAGS = -Wall
 LDLIBS = -pthread
 

@@ -1,0 +1,7 @@
+\BOOKMARK [1][-]{section*.2}{Reading}{}% 1
+\BOOKMARK [2][-]{section*.3}{The Future of Microprocessors}{section*.2}% 2
+\BOOKMARK [2][-]{section*.4}{Software and the Concurrency Revolution}{section*.2}% 3
+\BOOKMARK [1][-]{section*.5}{Pointer Chasing Benchmark}{}% 4
+\BOOKMARK [2][-]{section*.6}{Memory Levels, Cache Size and Associated Latency}{section*.5}% 5
+\BOOKMARK [2][-]{section*.7}{Associativity of the caches and the TLB}{section*.5}% 6
+\BOOKMARK [1][-]{section*.8}{Multi-threaded load bandwidth}{}% 7
