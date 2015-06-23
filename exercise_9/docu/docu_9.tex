@@ -172,20 +172,59 @@
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}[Reading]
-\subsection{Token Coherence: Decoupling Performance and Correctness}
+\subsection{Token Coherence: A New Framework for Scalable Directory-Based Cache Coherence Schemes}
 The authors introduce their developed TokenB, a specific Token Coherence performance protocol that allows a glueless multiprocessing. They claim to combine the advantages of the predominant approaches which are exploiting a low-latency unordered interconnect like directory protocols and avoiding indirection like snooping protocols. Therefore, their protocol consists of two parts: a correctness substrate and a performance protocol.\\
-Their correctness substrate uses token counting to enforce safety and uses persistent requests to prevent starvation. For their TokenB performance protocol they use three policies: Issuing transient requests, responding to transient requests, reissuing transient requests. Their evaluations show that TokenB can outperform directory protocols and snooping protocols. However it is not scaleable to an unlimited number processors since it relies on broadcasts. Their test showed that it is feasable for up to 64 cores. \\
-The authors show that their developed method outperforms current approaches and discuss the advantages and limits very elaborately. It remains unclear to us why Token Coherence Protocols did not manage to get more popular since 2003. \\
+Their correctness substrate uses token counting to enforce safety and uses persistent 
+requests to prevent starvation. For their TokenB performance protocol they use three 
+policies: Issuing transient requests, responding to transient requests, reissuing transient 
+requests. Their evaluations show that TokenB can outperform directory protocols and snooping
+protocols. However it is not scaleable to an unlimited number processors since it relies on 
+broadcasts. Their test showed that it is feasable for up to 64 cores. \\
+The authors show that their developed method outperforms current approaches and discuss 
+the advantages and limits very elaborately. It remains unclear to us why Token Coherence 
+Protocols did not manage to get more popular since 2003. \\
 We like this paper and give it a strong accept.
 
+\subsection{Cache Hierarchy and Memory Subsystem of the AMD Opteron Processor}
+This paper exposes the advances of the 12-Core AMD Opteron processor with a focus on the 
+the Probe Filter, a feature for cache coherence protocols. The Probe Filter or HT Assistas 
+it is sometimes called, works by using part of the processor’s L3 cache as a directory cache. 
+This directory cache tracks all cache lines cached in the system. Instead of generating 
+numerous cache probes when checking a cache line the processor does a Probe Filter Lookup. 
+This helps lower latency for accesses to local DRAM because there is no need to wait for 
+probe responses when accessing local data. With significantly reduced probe traffic it 
+effectively also increases system bandwidth performance.
+\\
+Fundamentally, we think that the idea of a directory cache placed on the L3 cache is a good 
+way to improve the high costs of DRAM accesses. Nevertheless, this technology leads to
+a loss of important useable cache space what could end up in performance losses for some 
+memory intensive application. Also, this concept is technological not scalable at all 
+due to limited cache memory. We accept this paper.
+\end{homeworkProblem}
 
+%----------------------------------------------------------------------------------------
+%	Red-Black Tree – Fine grain locking
+%----------------------------------------------------------------------------------------
 
+\begin{homeworkProblem}[Red-Black Tree – Fine grain locking]
+The basic idea of our fine-grain locking implementation is to store a lock in each node
+so we can lock only certain parts of the tree. If we performe a search operation we
+simply read-lock every involved node, which allows us to search concurrent and ensure 
+correctness of the data.
+\\
+For inserting new nodes, we implemented the functions wrlock\_branch() and unlock\_branch().
+This functions write-locks and unlocks a certain branch ten levels from the targeted node.
+So, if we want to performe an insert-operation we lock this branch and avoid therefor 
+raceconditions.
+\end{homeworkProblem}
 
-\subsection{CACHE HIERARCHY AND MEMORY SUBSYSTEM OF THE AMD OPTERON PROCESSOR}
-
-
-
-
-
+%----------------------------------------------------------------------------------------
+%	Red-Black Tree – Performance of fine-grain locking
+%----------------------------------------------------------------------------------------
+\begin{homeworkProblem}[Red-Black Tree – Performance of fine-grain locking]
+Our lock implementation still contains a bug and ends up in a deadlock sometimes because
+one thread doesn't unlock a node correctly. This complicates the performance evaluation 
+significant, so we pass on it.
 \clearpage
+\end{homeworkProblem}
 \end{document}
